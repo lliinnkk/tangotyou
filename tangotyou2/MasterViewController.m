@@ -30,6 +30,8 @@
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
+    
+    insertmode = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -39,13 +41,26 @@
 }
 
 - (void)insertNewObject:(id)sender
+
+
+
+
 {
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
+    if (insertmode==YES) {
+        blackView = [[UIView alloc] initWithFrame:CGRectMake(0,200,320,320)];
+        blackView.backgroundColor = [UIColor blackColor];
+        textFired= [[UITextField alloc]initWithFrame:CGRectMake(25, 25, 270, 40)];
+        textFired.backgroundColor= [UIColor whiteColor];
+        textFired.delegate = self;
+        [blackView addSubview:textFired];
+        [self.view addSubview:blackView];
+        insertmode=NO;
+        
+    }else{
+        NSLog(@"insertmodeになっていません。");
+        
     }
-    [_objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+
 }
 
 #pragma mark - Table View
@@ -109,5 +124,62 @@
         [[segue destinationViewController] setDetailItem:object];
     }
 }
+    
+ -(BOOL)textFiredShouldReturn:(UITextField *)tf
+   {
+       insertmode = YES;
+       
+       if(!_objects) {
+           _objects = [[NSMutableArray alloc]init];
+       }
+       if([textFired.text length]>0) {
+           [_objects insertObject:textFired.text atIndex:0];
+           NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0
+                                                       inSection:0];
+           [self.tableView  insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+       }else{
+           UIAlertView *alert= [[UIAlertView alloc]
+                                initWithTitle:@"未記入"message:@"何も書かれていません"
+                                delegate:self cancelButtonTitle:@"OK"
+                                otherButtonTitles:nil, nil];
+           [alert show];
+           
+       }
+       
+       if(blackView) {
+           [blackView removeFromSuperview];
+           
+       }
+       
+       
+       
+       [textFired resignFirstResponder];
+       return YES;
+       }
+   
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 @end

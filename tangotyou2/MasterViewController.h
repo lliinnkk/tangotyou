@@ -9,5 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface MasterViewController : UITableViewController
-
+<UITextFieldDelegate>
+{
+    UIView *blackView;
+    BOOL insertmode;
+    UITextField*textFired;
+    
+}
 @end
